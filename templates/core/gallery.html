@@ -1,0 +1,67 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Gallery - WAKO THANE{% endblock %}
+
+{% block content %}
+<section class="page-hero">
+  <div class="container page-hero-grid">
+    <div class="reveal">
+      <span class="section-kicker">Association gallery</span>
+      <h1 class="heading-lg">Photos from bouts, medal moments, training energy, and grassroots participation.</h1>
+      <p>The gallery now gives WAKO Thane a stronger public story - helping visitors see the sport, the community, and the atmosphere behind the association.</p>
+    </div>
+
+    <div class="card page-hero-card reveal">
+      <span class="panel-label">Best used for</span>
+      <ul class="mini-list">
+        <li>Competition day visuals and podium highlights.</li>
+        <li>Youth participation and academy representation.</li>
+        <li>Shareable moments that build trust and credibility.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container">
+    <div class="section-header reveal">
+      <span class="section-kicker">Photo highlights</span>
+      <h2 class="heading-lg">Visible proof that the association is active on the mat</h2>
+      <p>Every image can be opened in a larger lightbox for easier viewing on mobile.</p>
+    </div>
+
+    {% if items %}
+      <div class="gallery-grid reveal">
+        {% for item in items %}
+          <div class="gallery-item" data-src="{{ item.image.url }}">
+            <img src="{{ item.image.url }}" alt="{{ item.caption|default:'Gallery image' }}" loading="lazy">
+            <div class="gallery-overlay">
+              <span>{{ item.caption|default:"View image" }}</span>
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+    {% else %}
+      <div class="gallery-grid reveal">
+        <div class="gallery-item" data-src="{% static '1000452560.jpeg' %}">
+          <img src="{% static '1000452560.jpeg' %}" alt="Kickboxing action during a WAKO Thane match" loading="lazy">
+          <div class="gallery-overlay"><span>Match action</span></div>
+        </div>
+        <div class="gallery-item" data-src="{% static '1000451959.jpeg' %}">
+          <img src="{% static '1000451959.jpeg' %}" alt="State selection medals" loading="lazy">
+          <div class="gallery-overlay"><span>Championship medals</span></div>
+        </div>
+        <div class="gallery-item" data-src="{% static '1000453732.jpeg' %}">
+          <img src="{% static '1000453732.jpeg' %}" alt="Young kickboxing medal winners" loading="lazy">
+          <div class="gallery-overlay"><span>Youth winners</span></div>
+        </div>
+        <div class="gallery-item" data-src="{% static '1000456564.jpeg' %}">
+          <img src="{% static '1000456564.jpeg' %}" alt="Young athlete ready for competition" loading="lazy">
+          <div class="gallery-overlay"><span>Fight day preparation</span></div>
+        </div>
+      </div>
+    {% endif %}
+  </div>
+</section>
+{% endblock %}

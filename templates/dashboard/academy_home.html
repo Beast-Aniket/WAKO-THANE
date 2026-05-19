@@ -1,0 +1,50 @@
+{% extends 'dashboard_base.html' %}
+
+{% block title %}Academy Dashboard - WAKO THANE{% endblock %}
+
+{% block dashboard_content %}
+<div class="dash-header reveal">
+  <div>
+    <span class="section-kicker">Academy portal</span>
+    <h1 class="heading-lg">Welcome, {{ user.first_name|default:user.username }}.</h1>
+    <p class="text-muted">Use this space to keep your club aligned with the association schedule, leadership contacts, and public announcements.</p>
+  </div>
+</div>
+
+<div class="dashboard-content-grid">
+  <section class="card reveal">
+    <div class="section-header section-header-tight">
+      <span class="section-kicker">Next actions</span>
+      <h2 class="heading-md">Keep your academy connected</h2>
+    </div>
+    <ul class="mini-list">
+      <li>Review the public event calendar for upcoming association activity.</li>
+      <li>Use the contact page for questions about participation or updates.</li>
+      <li>Check the members page to see the current leadership roster.</li>
+    </ul>
+    <div class="cta-actions cta-actions-left">
+      <a href="{% url 'events' %}" class="btn btn-primary btn-sm">View events</a>
+      <a href="{% url 'contact' %}" class="btn btn-outline btn-sm">Contact association</a>
+    </div>
+  </section>
+
+  <aside class="card reveal">
+    <div class="section-header section-header-tight">
+      <span class="section-kicker">Upcoming events</span>
+      <h2 class="heading-md">Plan ahead</h2>
+    </div>
+    {% if upcoming_events %}
+      <div class="compact-list">
+        {% for event in upcoming_events %}
+          <div class="compact-list-item">
+            <strong>{{ event.title }}</strong>
+            <span>{{ event.date|date:"d M Y, H:i" }}</span>
+          </div>
+        {% endfor %}
+      </div>
+    {% else %}
+      <p class="text-muted">No events have been published yet. The next official association date will appear here once it is added.</p>
+    {% endif %}
+  </aside>
+</div>
+{% endblock %}

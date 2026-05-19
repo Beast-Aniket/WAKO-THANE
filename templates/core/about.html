@@ -1,0 +1,105 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<section class="page-hero">
+  <div class="container page-hero-grid">
+    <div class="reveal">
+      <span class="section-kicker">About WAKO Thane</span>
+      <h1 class="heading-lg">A local association hub for disciplined kickboxing, athlete growth, and official event culture.</h1>
+      <p>WAKO Thane supports academies, athletes, coaches, parents, and organizers through competition pathways, development opportunities, and better association communication.</p>
+    </div>
+
+    <div class="card page-hero-card reveal">
+      <img src="{% static '1000453732.jpeg' %}" alt="WAKO Thane medal winners and officials" class="card-img">
+      <span class="panel-label">At a glance</span>
+      <div class="info-stack">
+        <div class="info-line">
+          <strong>{% if member_count %}{{ member_count }}{% else %}Committee ready{% endif %}</strong>
+          <span>{% if member_count %}published leadership entries{% else %}for executive and technical roles{% endif %}</span>
+        </div>
+        <div class="info-line">
+          <strong>{% if event_count %}{{ event_count }}{% else %}Event calendar{% endif %}</strong>
+          <span>{% if event_count %}live competition and camp listings{% else %}prepared for trials and championships{% endif %}</span>
+        </div>
+        <div class="info-line">
+          <strong>{% if gallery_count %}{{ gallery_count }}{% else %}Photo gallery{% endif %}</strong>
+          <span>{% if gallery_count %}published event-day moments{% else %}ready for athlete and academy highlights{% endif %}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container split-grid">
+    <article class="card reveal">
+      <span class="section-kicker">Mission</span>
+      <h2 class="heading-md">Promote safe, structured, competitive kickboxing across Thane.</h2>
+      <p>From first-time youth participants to academy athletes preparing for state-level competition, the association exists to create clarity, opportunity, and credibility around the sport.</p>
+      <p class="text-muted">The website supports that mission with fast access to event dates, leadership details, gallery highlights, and athlete-facing communication.</p>
+    </article>
+
+    <article class="card reveal">
+      <img src="{% static '1000451959.jpeg' %}" alt="State selection kickboxing medals" class="card-img">
+      <h3 class="heading-sm">Recognized effort and visible progress</h3>
+      <p>Medals, trials, grassroots participation, and association updates all deserve a presentation layer that feels official and current.</p>
+    </article>
+  </div>
+</section>
+
+<section class="section section-muted">
+  <div class="container">
+    <div class="section-header reveal">
+      <span class="section-kicker">Association details</span>
+      <h2 class="heading-lg">What the association website is built to support</h2>
+      <p>The public site is structured around the practical needs of athletes, academies, officials, and families.</p>
+    </div>
+
+    <div class="feature-grid">
+      <article class="card feature-card reveal">
+        <span class="feature-index">01</span>
+        <h3 class="heading-sm">WAKO-aligned development</h3>
+        <p>Clear public communication around competitions, camps, trials, and athlete progression under a recognized kickboxing structure.</p>
+      </article>
+
+      <article class="card feature-card reveal">
+        <span class="feature-index">02</span>
+        <h3 class="heading-sm">Academy coordination</h3>
+        <p>One place for clubs and coaches to stay aware of official events, registrations, and association announcements.</p>
+      </article>
+
+      <article class="card feature-card reveal">
+        <span class="feature-index">03</span>
+        <h3 class="heading-sm">Community trust</h3>
+        <p>Parents, athletes, and supporters can now quickly understand who the association serves and how to connect with it.</p>
+      </article>
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container">
+    <div class="section-header reveal">
+      <span class="section-kicker">Contact snapshot</span>
+      <h2 class="heading-lg">Stay connected with the association</h2>
+      <p>Use these channels for athlete registration, academy coordination, and event-related queries.</p>
+    </div>
+
+    <div class="info-grid">
+      <article class="card reveal">
+        <h3 class="heading-sm">Email</h3>
+        <p><a href="mailto:{{ contact_email }}">{{ contact_email }}</a></p>
+      </article>
+      <article class="card reveal">
+        <h3 class="heading-sm">Phone</h3>
+        <p><a href="tel:{{ contact_phone|cut:' ' }}">{{ contact_phone }}</a></p>
+      </article>
+      <article class="card reveal">
+        <h3 class="heading-sm">Address</h3>
+        <p>{{ contact_address }}</p>
+      </article>
+    </div>
+  </div>
+</section>
+{% endblock %}

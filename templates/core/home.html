@@ -1,0 +1,261 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<section class="hero-section">
+  <canvas id="hero-canvas" aria-hidden="true"></canvas>
+  <div class="container hero-grid">
+    <div class="hero-copy reveal">
+      <span class="section-kicker">WAKO India affiliated kickboxing association</span>
+      <h1 class="heading-display">{{ hero_title }}</h1>
+      <p class="hero-text">{{ hero_subtitle }}</p>
+
+      <div class="hero-actions">
+        <a href="{% url 'register' %}" class="btn btn-primary">Register as athlete</a>
+        <a href="{% url 'events' %}" class="btn btn-outline">See upcoming bouts</a>
+      </div>
+
+      <div class="hero-proof">
+        <div class="proof-card">
+          <strong>Tatami and ring sport</strong>
+          <span>Point fighting, kick light, light contact, low kick, and full contact pathways under one association.</span>
+        </div>
+        <div class="proof-card">
+          <strong>District to state journey</strong>
+          <span>Trials, coaching camps, referee development, and championship preparation for every stage.</span>
+        </div>
+        <div class="proof-card">
+          <strong>Athletes, academies, families</strong>
+          <span>A clearer hub for schedules, registrations, committee updates, and community credibility.</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="hero-panel reveal">
+      {% if latest_events %}
+        <div class="hero-panel-card">
+          <img src="{% static '1000452560.jpeg' %}" alt="Kickboxing bout during a WAKO Thane event" class="card-img">
+          <span class="panel-label">Next featured event</span>
+          <h2 class="heading-md">{{ latest_events.0.title }}</h2>
+          <p class="panel-meta">{{ latest_events.0.date|date:"d M Y, H:i" }}</p>
+          <p class="text-muted">{{ latest_events.0.description|truncatewords:18 }}</p>
+          <div class="countdown" data-countdown="{{ latest_events.0.date|date:'c' }}"></div>
+          <a href="{% url 'events' %}" class="btn btn-primary btn-sm">View full event calendar</a>
+        </div>
+      {% else %}
+        <div class="hero-panel-card">
+          <img src="{% static '1000451959.jpeg' %}" alt="Kickboxing medals prepared for competition winners" class="card-img">
+          <span class="panel-label">Association focus</span>
+          <h2 class="heading-md">Competition, coaching, and athlete growth</h2>
+          <ul class="mini-list">
+            <li>District and state-level kickboxing participation.</li>
+            <li>Structured camps for athletes, coaches, and officials.</li>
+            <li>Clear communication for academies and parents.</li>
+          </ul>
+          <a href="{% url 'contact' %}" class="btn btn-outline btn-sm">Contact the association</a>
+        </div>
+      {% endif %}
+
+      <div class="hero-panel-grid">
+        <div class="mini-card">
+          <strong>{% if player_count %}{{ player_count }}{% else %}Athletes{% endif %}</strong>
+          <span>{% if player_count %}registered players{% else %}grassroots to advanced development{% endif %}</span>
+        </div>
+        <div class="mini-card">
+          <strong>{% if academy_count %}{{ academy_count }}{% else %}Academies{% endif %}</strong>
+          <span>{% if academy_count %}active academy accounts{% else %}academy coordination and support{% endif %}</span>
+        </div>
+        <div class="mini-card">
+          <strong>{% if event_count %}{{ event_count }}{% else %}Events{% endif %}</strong>
+          <span>{% if event_count %}competition and camp listings{% else %}bouts, trials, and clinics{% endif %}</span>
+        </div>
+        <div class="mini-card">
+          <strong>{% if member_count %}{{ member_count }}{% else %}Committee{% endif %}</strong>
+          <span>{% if member_count %}leadership entries on site{% else %}leadership, referees, and operations{% endif %}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <a href="#home-overview" class="scroll-hint">
+    <small>Scroll for training, events, and updates</small>
+    <span></span>
+  </a>
+</section>
+
+<section class="section" id="home-overview">
+  <div class="container">
+    <div class="section-header reveal">
+      <span class="section-kicker">Association focus</span>
+      <h2 class="heading-lg">What WAKO Thane is building on the mat and beyond it</h2>
+      <p>From first-time participants to medal contenders, the site explains how local kickboxing activity, leadership, and athlete progression come together under one association.</p>
+    </div>
+
+    <div class="feature-grid">
+      <article class="card feature-card reveal">
+        <span class="feature-index">01</span>
+        <h3 class="heading-sm">Competition pathway</h3>
+        <p>Publish district trials, league fixtures, invitational bouts, and championship calendars in one official place.</p>
+      </article>
+
+      <article class="card feature-card reveal">
+        <span class="feature-index">02</span>
+        <h3 class="heading-sm">Coaching and officiating</h3>
+        <p>Use the site to support coach education, referee clinics, and better communication with affiliated academies.</p>
+      </article>
+
+      <article class="card feature-card reveal">
+        <span class="feature-index">03</span>
+        <h3 class="heading-sm">Grassroots development</h3>
+        <p>Show parents and new athletes that the association is active, structured, and invested in safe growth.</p>
+      </article>
+    </div>
+  </div>
+</section>
+
+<section class="section section-muted">
+  <div class="container">
+    <div class="section-header reveal section-header-row">
+      <div>
+        <span class="section-kicker">Upcoming schedule</span>
+        <h2 class="heading-lg">Bouts, camps, and association dates to watch</h2>
+        <p>Keep athletes, coaches, and academy managers aligned around the next important kickboxing activity.</p>
+      </div>
+      <a href="{% url 'events' %}" class="btn btn-outline btn-sm">View all events</a>
+    </div>
+
+    <div class="events-grid">
+      {% for event in latest_events %}
+        <article class="card event-card reveal">
+          {% if event.poster_image %}
+            <img src="{{ event.poster_image.url }}" alt="{{ event.title }}" class="card-img">
+          {% else %}
+            <img src="{% static '1000451959.jpeg' %}" alt="Kickboxing medals for the event podium" class="card-img">
+          {% endif %}
+          <span class="event-date-badge">{{ event.date|date:"d M Y, H:i" }}</span>
+          <h3 class="heading-sm">{{ event.title }}</h3>
+          <p class="text-muted">{{ event.description|truncatewords:24 }}</p>
+          <div class="countdown" data-countdown="{{ event.date|date:'c' }}"></div>
+          <a href="{% url 'events' %}" class="btn btn-outline btn-sm">Open event page</a>
+        </article>
+      {% empty %}
+        <div class="card empty-state reveal">
+          <h3 class="heading-sm">Association events will appear here</h3>
+          <p>This section is prepared for championships, coaching clinics, referee workshops, and academy development meets.</p>
+          <a href="{% url 'contact' %}" class="btn btn-primary btn-sm">Contact the association</a>
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container">
+    <div class="section-header reveal section-header-row">
+      <div>
+        <span class="section-kicker">Association leadership</span>
+        <h2 class="heading-lg">Committee roles and community leadership</h2>
+        <p>Strong visibility around organizers, coaches, and operational support helps new athletes trust the association.</p>
+      </div>
+      <a href="{% url 'members' %}" class="btn btn-outline btn-sm">Open committee page</a>
+    </div>
+
+    {% if featured_members %}
+      <div class="members-grid members-grid-spotlight">
+        {% for member in featured_members %}
+          <article class="card member-card reveal">
+            <div class="member-img-wrap">
+              {% if member.image %}
+                <img src="{{ member.image.url }}" alt="{{ member.name }}">
+              {% else %}
+                <span class="initials">{{ member.name|first }}</span>
+              {% endif %}
+            </div>
+            <div class="member-name">{{ member.name }}</div>
+            <div class="member-pos">{{ member.position }}</div>
+          </article>
+        {% endfor %}
+      </div>
+    {% else %}
+      <div class="split-grid">
+        <article class="card reveal">
+          <img src="{% static '1000453732.jpeg' %}" alt="Young medal winners and officials at a WAKO Thane kickboxing event" class="card-img">
+          <h3 class="heading-sm">Built around athlete development</h3>
+          <p>Committee pages can highlight presidents, secretaries, technical heads, event coordinators, and academy representatives as the roster is published.</p>
+        </article>
+        <div class="stack-grid">
+          <article class="card reveal">
+            <h3 class="heading-sm">Technical leadership</h3>
+            <p>Support for training standards, bout supervision, and pathway planning for ring and tatami disciplines.</p>
+          </article>
+          <article class="card reveal">
+            <h3 class="heading-sm">Tournament operations</h3>
+            <p>Coordination for registrations, weigh-ins, mat assignments, officials, and athlete communication.</p>
+          </article>
+          <article class="card reveal">
+            <h3 class="heading-sm">Community trust</h3>
+            <p>Parents, academies, and sponsors benefit from a public face that looks organized and credible.</p>
+          </article>
+        </div>
+      </div>
+    {% endif %}
+  </div>
+</section>
+
+<section class="section section-muted">
+  <div class="container">
+    <div class="section-header reveal section-header-row">
+      <div>
+        <span class="section-kicker">Gallery highlights</span>
+        <h2 class="heading-lg">Real moments from bouts, medals, and grassroots participation</h2>
+        <p>Use visual proof to show the energy of local kickboxing, youth participation, and event-day atmosphere.</p>
+      </div>
+      <a href="{% url 'gallery' %}" class="btn btn-outline btn-sm">Open gallery</a>
+    </div>
+
+    {% if gallery_preview %}
+      <div class="gallery-grid reveal">
+        {% for item in gallery_preview %}
+          <div class="gallery-item" data-src="{{ item.image.url }}">
+            <img src="{{ item.image.url }}" alt="{{ item.caption|default:'Gallery image' }}" loading="lazy">
+            <div class="gallery-overlay">
+              <span>{{ item.caption|default:"View image" }}</span>
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+    {% else %}
+      <div class="gallery-grid reveal">
+        <div class="gallery-item" data-src="{% static '1000452560.jpeg' %}">
+          <img src="{% static '1000452560.jpeg' %}" alt="Kickboxing ring action" loading="lazy">
+          <div class="gallery-overlay"><span>Tatami action</span></div>
+        </div>
+        <div class="gallery-item" data-src="{% static '1000451959.jpeg' %}">
+          <img src="{% static '1000451959.jpeg' %}" alt="State selection medals" loading="lazy">
+          <div class="gallery-overlay"><span>Championship medals</span></div>
+        </div>
+        <div class="gallery-item" data-src="{% static '1000453732.jpeg' %}">
+          <img src="{% static '1000453732.jpeg' %}" alt="Young athletes with medals" loading="lazy">
+          <div class="gallery-overlay"><span>Youth medal winners</span></div>
+        </div>
+      </div>
+    {% endif %}
+  </div>
+</section>
+
+<section class="section section-compact">
+  <div class="container">
+    <div class="cta-panel reveal">
+      <div>
+        <span class="section-kicker">Join WAKO Thane</span>
+        <h2 class="heading-lg">Register your academy, step onto the mat, and stay connected to official kickboxing activity.</h2>
+        <p>Use the website to follow the event calendar, connect with the association, and present WAKO Thane professionally to athletes, academies, and supporters.</p>
+      </div>
+      <div class="cta-actions">
+        <a href="{% url 'register' %}" class="btn btn-primary">Create account</a>
+        <a href="{% url 'contact' %}" class="btn btn-outline">Speak with the association</a>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}

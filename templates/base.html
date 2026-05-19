@@ -1,0 +1,169 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}WAKO THANE - Thane City Kickboxing Association{% endblock %}</title>
+  <meta name="description" content="{% block meta_desc %}Official website of WAKO Thane. Train, compete, and grow through a disciplined kickboxing community built for athletes and academies.{% endblock %}">
+  <link rel="icon" href="{% static 'logo.png' %}">
+  <link rel="stylesheet" href="{% static 'css/style.css' %}">
+  {% block extra_css %}{% endblock %}
+</head>
+<body class="site-body {% block body_class %}{% endblock %}">
+  <header class="site-header">
+    <nav class="navbar">
+      <div class="container nav-inner">
+        <a href="{% url 'home' %}" class="nav-logo" aria-label="WAKO Thane home">
+          <img src="{% static 'logo.png' %}" alt="WAKO Thane">
+          <span>WAKO THANE</span>
+        </a>
+
+        <nav class="nav-links" aria-label="Primary navigation">
+          <a href="{% url 'home' %}" class="nav-link {% if request.resolver_match.url_name == 'home' %}active{% endif %}">Home</a>
+          <a href="{% url 'about' %}" class="nav-link {% if request.resolver_match.url_name == 'about' %}active{% endif %}">About</a>
+          <a href="{% url 'gallery' %}" class="nav-link {% if request.resolver_match.url_name == 'gallery' %}active{% endif %}">Gallery</a>
+          <a href="{% url 'events' %}" class="nav-link {% if request.resolver_match.url_name == 'events' %}active{% endif %}">Events</a>
+          <a href="{% url 'members' %}" class="nav-link {% if request.resolver_match.url_name == 'members' %}active{% endif %}">Members</a>
+          <a href="{% url 'contact' %}" class="nav-link {% if request.resolver_match.url_name == 'contact' %}active{% endif %}">Contact</a>
+        </nav>
+
+        <div class="nav-actions">
+          {% if user.is_authenticated %}
+            {% if user.role == 'ADMIN' or user.is_superuser %}
+              <a href="{% url 'dashboard' %}" class="btn btn-outline btn-sm">Dashboard</a>
+            {% elif user.role == 'ACADEMY' %}
+              <a href="{% url 'dashboard_academy' %}" class="btn btn-outline btn-sm">Dashboard</a>
+            {% else %}
+              <a href="{% url 'dashboard_player' %}" class="btn btn-outline btn-sm">Dashboard</a>
+            {% endif %}
+            <form method="post" action="{% url 'logout' %}" class="inline-form">
+              {% csrf_token %}
+              <button type="submit" class="btn btn-primary btn-sm">Logout</button>
+            </form>
+          {% else %}
+            <a href="{% url 'login' %}" class="btn btn-primary btn-sm">Login / Register</a>
+          {% endif %}
+
+          <button type="button" class="nav-toggle" data-menu-toggle aria-expanded="false" aria-controls="mobile-menu" aria-label="Open menu">
+            <span></span>
+            <span></span>
+            <span></span>
+          </button>
+        </div>
+      </div>
+    </nav>
+  </header>
+
+  <div class="menu-backdrop" data-menu-backdrop></div>
+  <aside class="mobile-menu" id="mobile-menu" aria-hidden="true">
+    <div class="mobile-menu-head">
+      <div>
+        <p class="mobile-menu-kicker">WAKO Thane</p>
+        <strong>Mobile navigation</strong>
+      </div>
+      <button type="button" class="mobile-menu-close" data-menu-close aria-label="Close menu">Close</button>
+    </div>
+
+    <nav class="mobile-menu-links" aria-label="Mobile navigation">
+      <a href="{% url 'home' %}" class="mobile-nav-link {% if request.resolver_match.url_name == 'home' %}active{% endif %}">Home</a>
+      <a href="{% url 'about' %}" class="mobile-nav-link {% if request.resolver_match.url_name == 'about' %}active{% endif %}">About</a>
+      <a href="{% url 'gallery' %}" class="mobile-nav-link {% if request.resolver_match.url_name == 'gallery' %}active{% endif %}">Gallery</a>
+      <a href="{% url 'events' %}" class="mobile-nav-link {% if request.resolver_match.url_name == 'events' %}active{% endif %}">Events</a>
+      <a href="{% url 'members' %}" class="mobile-nav-link {% if request.resolver_match.url_name == 'members' %}active{% endif %}">Members</a>
+      <a href="{% url 'contact' %}" class="mobile-nav-link {% if request.resolver_match.url_name == 'contact' %}active{% endif %}">Contact</a>
+    </nav>
+
+    <div class="mobile-menu-actions">
+      {% if user.is_authenticated %}
+        {% if user.role == 'ADMIN' or user.is_superuser %}
+          <a href="{% url 'dashboard' %}" class="btn btn-outline">Open dashboard</a>
+        {% elif user.role == 'ACADEMY' %}
+          <a href="{% url 'dashboard_academy' %}" class="btn btn-outline">Open dashboard</a>
+        {% else %}
+          <a href="{% url 'dashboard_player' %}" class="btn btn-outline">Open dashboard</a>
+        {% endif %}
+        <form method="post" action="{% url 'logout' %}">
+          {% csrf_token %}
+          <button type="submit" class="btn btn-primary btn-block">Logout</button>
+        </form>
+      {% else %}
+        <a href="{% url 'register' %}" class="btn btn-primary">Register now</a>
+        <a href="{% url 'login' %}" class="btn btn-outline">Login</a>
+      {% endif %}
+    </div>
+
+    <div class="mobile-menu-meta">
+      <p>{{ site_settings.contact_phone }}</p>
+      <p>{{ site_settings.contact_email }}</p>
+    </div>
+  </aside>
+
+  {% if messages %}
+    <div class="messages-container">
+      {% for msg in messages %}
+        <div class="alert alert-{{ msg.tags|default:'info' }}">
+          <span>{{ msg }}</span>
+          <button class="alert-close" aria-label="Close message">&times;</button>
+        </div>
+      {% endfor %}
+    </div>
+  {% endif %}
+
+  <div class="lightbox" id="lightbox">
+    <button class="lightbox-close" aria-label="Close image">&times;</button>
+    <img src="" alt="Expanded gallery image">
+  </div>
+
+  <main class="main-shell">
+    {% block content %}{% endblock %}
+  </main>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-top">
+        <div class="footer-brand">
+          <img src="{% static 'logo.png' %}" alt="WAKO Thane">
+          <h2>Build stronger athletes, stronger academies, and a stronger kickboxing culture in Thane.</h2>
+          <p>WAKO Thane connects athletes, coaches, academies, parents, and officials through recognised kickboxing pathways, event coordination, and public association updates.</p>
+        </div>
+
+        <div class="footer-grid">
+          <div class="footer-col">
+            <h3>Explore</h3>
+            <a href="{% url 'home' %}">Home</a>
+            <a href="{% url 'about' %}">About us</a>
+            <a href="{% url 'events' %}">Events</a>
+            <a href="{% url 'gallery' %}">Gallery</a>
+            <a href="{% url 'members' %}">Members</a>
+          </div>
+
+          <div class="footer-col">
+            <h3>Member access</h3>
+            <a href="{% url 'register' %}">Register as player</a>
+            <a href="{% url 'register' %}">Register as academy</a>
+            <a href="{% url 'login' %}">Login</a>
+            <a href="{% url 'contact' %}">Contact support</a>
+          </div>
+
+          <div class="footer-col">
+            <h3>Contact</h3>
+            <a href="mailto:{{ site_settings.contact_email }}">{{ site_settings.contact_email }}</a>
+            <a href="tel:{{ site_settings.contact_phone|cut:' ' }}">{{ site_settings.contact_phone }}</a>
+            <p>{{ site_settings.contact_address }}</p>
+            <span class="footer-tag">Affiliated with WAKO India</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <p>&copy; {{ current_year }} WAKO Thane. All rights reserved.</p>
+        <p>Built for quick access during registrations, event days, and daily academy communication.</p>
+      </div>
+    </div>
+  </footer>
+
+  <script src="{% static 'js/main.js' %}"></script>
+  {% block extra_js %}{% endblock %}
+</body>
+</html>

@@ -1,0 +1,135 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}Dashboard - WAKO THANE{% endblock %}</title>
+  <link rel="icon" href="{% static 'logo.png' %}">
+  <link rel="stylesheet" href="{% static 'css/style.css' %}">
+  {% block extra_css %}{% endblock %}
+</head>
+<body class="dashboard-body">
+  <header class="dashboard-topbar">
+    <div class="container dashboard-topbar-inner">
+      <div class="dashboard-topbar-left">
+        <button type="button" class="dashboard-toggle" data-dashboard-toggle aria-expanded="false" aria-controls="dashboard-sidebar" aria-label="Open dashboard navigation">
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
+        <a href="{% url 'home' %}" class="nav-logo" aria-label="Return to public site">
+          <img src="{% static 'logo.png' %}" alt="WAKO Thane">
+          <span>WAKO THANE</span>
+        </a>
+      </div>
+
+      <div class="dashboard-user">
+        <div class="dashboard-user-copy">
+          <span class="section-kicker">Signed in</span>
+          <strong>{{ user.first_name|default:user.username }}</strong>
+        </div>
+
+        {% if user.role == 'ADMIN' or user.is_superuser %}
+          <span class="role-badge badge-admin">ADMIN</span>
+        {% elif user.role == 'ACADEMY' %}
+          <span class="role-badge badge-academy">ACADEMY</span>
+        {% else %}
+          <span class="role-badge badge-player">PLAYER</span>
+        {% endif %}
+
+        <a href="{% url 'home' %}" class="btn btn-outline btn-sm">View site</a>
+        <form method="post" action="{% url 'logout' %}" class="inline-form">
+          {% csrf_token %}
+          <button type="submit" class="btn btn-danger btn-sm">Logout</button>
+        </form>
+      </div>
+    </div>
+  </header>
+
+  <div class="dashboard-backdrop" data-dashboard-backdrop></div>
+
+  <div class="dashboard-layout">
+    <aside class="dashboard-sidebar" id="dashboard-sidebar" data-dashboard-sidebar>
+      <div class="dashboard-sidebar-header">
+        {% if user.role == 'ADMIN' or user.is_superuser %}
+          <span class="section-kicker">Admin panel</span>
+          <h2 class="heading-sm">Content control</h2>
+        {% elif user.role == 'ACADEMY' %}
+          <span class="section-kicker">Academy portal</span>
+          <h2 class="heading-sm">Stay aligned</h2>
+        {% else %}
+          <span class="section-kicker">Player portal</span>
+          <h2 class="heading-sm">Your next steps</h2>
+        {% endif %}
+      </div>
+
+      <div class="dashboard-sidebar-user">
+        <div class="dashboard-user-copy">
+          <span class="section-kicker">Signed in</span>
+          <strong>{{ user.first_name|default:user.username }}</strong>
+        </div>
+
+        {% if user.role == 'ADMIN' or user.is_superuser %}
+          <span class="role-badge badge-admin">ADMIN</span>
+        {% elif user.role == 'ACADEMY' %}
+          <span class="role-badge badge-academy">ACADEMY</span>
+        {% else %}
+          <span class="role-badge badge-player">PLAYER</span>
+        {% endif %}
+
+        <div class="dashboard-sidebar-actions">
+          <a href="{% url 'home' %}" class="btn btn-outline btn-sm">View site</a>
+          <form method="post" action="{% url 'logout' %}">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-danger btn-sm btn-block">Logout</button>
+          </form>
+        </div>
+      </div>
+
+      <nav class="dashboard-nav" aria-label="Dashboard navigation">
+        {% if user.role == 'ADMIN' or user.is_superuser %}
+          <a href="{% url 'dashboard' %}" class="dashboard-link {% if request.resolver_match.url_name == 'dashboard' %}active{% endif %}">Overview</a>
+          <a href="{% url 'dashboard_events' %}" class="dashboard-link {% if request.resolver_match.url_name == 'dashboard_events' %}active{% endif %}">Events</a>
+          <a href="{% url 'dashboard_gallery' %}" class="dashboard-link {% if request.resolver_match.url_name == 'dashboard_gallery' %}active{% endif %}">Gallery</a>
+          <a href="{% url 'dashboard_members' %}" class="dashboard-link {% if request.resolver_match.url_name == 'dashboard_members' %}active{% endif %}">Members</a>
+          <a href="/admin/" class="dashboard-link">Django admin</a>
+        {% elif user.role == 'ACADEMY' %}
+          <a href="{% url 'dashboard_academy' %}" class="dashboard-link {% if request.resolver_match.url_name == 'dashboard_academy' %}active{% endif %}">Academy home</a>
+          <a href="{% url 'events' %}" class="dashboard-link">Public events</a>
+          <a href="{% url 'members' %}" class="dashboard-link">Leadership</a>
+          <a href="{% url 'contact' %}" class="dashboard-link">Contact</a>
+        {% else %}
+          <a href="{% url 'dashboard_player' %}" class="dashboard-link {% if request.resolver_match.url_name == 'dashboard_player' %}active{% endif %}">Player home</a>
+          <a href="{% url 'events' %}" class="dashboard-link">Upcoming events</a>
+          <a href="{% url 'gallery' %}" class="dashboard-link">Gallery</a>
+          <a href="{% url 'contact' %}" class="dashboard-link">Contact</a>
+        {% endif %}
+      </nav>
+
+      <div class="dashboard-sidebar-card">
+        <span class="section-kicker">Mobile ready</span>
+        <p>Open this menu during registrations, event days, or travel so the dashboard stays easy to use on smaller screens.</p>
+      </div>
+    </aside>
+
+    <main class="dashboard-main">
+      {% if messages %}
+        <div class="messages-container messages-container-static">
+          {% for msg in messages %}
+            <div class="alert alert-{{ msg.tags|default:'info' }}">
+              <span>{{ msg }}</span>
+              <button class="alert-close" aria-label="Close message">&times;</button>
+            </div>
+          {% endfor %}
+        </div>
+      {% endif %}
+
+      {% block dashboard_content %}{% endblock %}
+    </main>
+  </div>
+
+  <script src="{% static 'js/main.js' %}"></script>
+  {% block extra_js %}{% endblock %}
+</body>
+</html>

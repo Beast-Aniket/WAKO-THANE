@@ -1,0 +1,60 @@
+{% extends 'dashboard_base.html' %}
+
+{% block title %}Player Dashboard - WAKO THANE{% endblock %}
+
+{% block dashboard_content %}
+<div class="dash-header reveal">
+  <div>
+    <span class="section-kicker">Player portal</span>
+    <h1 class="heading-lg">Welcome, {{ user.first_name|default:user.username }}.</h1>
+    <p class="text-muted">Track your profile, stay ready for upcoming kickboxing dates, and keep association information close at hand on mobile.</p>
+  </div>
+</div>
+
+<div class="dashboard-content-grid">
+  <section class="card reveal">
+    <div class="section-header section-header-tight">
+      <span class="section-kicker">Your profile</span>
+      <h2 class="heading-md">Account summary</h2>
+    </div>
+    <div class="info-grid info-grid-tight">
+      <div class="info-line">
+        <strong>Username</strong>
+        <span>{{ user.username }}</span>
+      </div>
+      <div class="info-line">
+        <strong>Email</strong>
+        <span>{{ user.email }}</span>
+      </div>
+      <div class="info-line">
+        <strong>Phone</strong>
+        <span>{{ user.phone|default:"Not set" }}</span>
+      </div>
+    </div>
+    <div class="divider"></div>
+    <div class="cta-actions cta-actions-left">
+      <a href="{% url 'events' %}" class="btn btn-primary btn-sm">View upcoming events</a>
+      <a href="{% url 'gallery' %}" class="btn btn-outline btn-sm">Open gallery</a>
+    </div>
+  </section>
+
+  <aside class="card reveal">
+    <div class="section-header section-header-tight">
+      <span class="section-kicker">Upcoming events</span>
+      <h2 class="heading-md">Stay ready</h2>
+    </div>
+    {% if upcoming_events %}
+      <div class="compact-list">
+        {% for event in upcoming_events %}
+          <div class="compact-list-item">
+            <strong>{{ event.title }}</strong>
+            <span>{{ event.date|date:"d M Y, H:i" }}</span>
+          </div>
+        {% endfor %}
+      </div>
+    {% else %}
+      <p class="text-muted">No events are available yet. As soon as the association publishes the next date, it will appear here.</p>
+    {% endif %}
+  </aside>
+</div>
+{% endblock %}

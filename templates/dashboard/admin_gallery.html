@@ -1,0 +1,63 @@
+{% extends 'dashboard_base.html' %}
+
+{% block title %}Manage Gallery - WAKO THANE{% endblock %}
+
+{% block dashboard_content %}
+<div class="dash-header reveal">
+  <div>
+    <span class="section-kicker">Gallery manager</span>
+    <h1 class="heading-lg">Upload images that give the site real energy.</h1>
+    <p class="text-muted">Use action shots, medal moments, camps, and group photos to show that the association is active and credible.</p>
+  </div>
+</div>
+
+<div class="card reveal form-card-spacious">
+  <div class="section-header section-header-tight">
+    <span class="section-kicker">Upload image</span>
+    <h2 class="heading-md">Add a new gallery item</h2>
+  </div>
+  <form method="post" enctype="multipart/form-data" class="form-stack">
+    {% csrf_token %}
+    <input type="hidden" name="action" value="add">
+    <div class="input-group">
+      <label class="input-label">Select Image *</label>
+      <input type="file" name="image" class="input-field" accept="image/*" required>
+    </div>
+    <div class="input-group">
+      <label class="input-label">Caption (Optional)</label>
+      <input type="text" name="caption" class="input-field" placeholder="Describe the image">
+    </div>
+    <button type="submit" class="btn btn-primary">Upload image</button>
+  </form>
+</div>
+
+{% if items %}
+  <div class="card reveal">
+    <div class="section-header section-header-tight">
+      <span class="section-kicker">Existing items</span>
+      <h2 class="heading-md">Gallery images ({{ items|length }})</h2>
+    </div>
+    <div class="dashboard-gallery-grid">
+      {% for item in items %}
+        <div class="dashboard-gallery-card">
+          <img src="{{ item.image.url }}" alt="{{ item.caption|default:'Gallery image' }}">
+          <div class="dashboard-gallery-card-body">
+            <p>{{ item.caption|default:"No caption" }}</p>
+            <form method="post" onsubmit="return confirm('Delete this image?')">
+              {% csrf_token %}
+              <input type="hidden" name="action" value="delete">
+              <input type="hidden" name="item_id" value="{{ item.id }}">
+              <button type="submit" class="btn btn-danger btn-sm btn-block">Delete</button>
+            </form>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+{% else %}
+  <div class="card empty-state reveal">
+    <h3 class="heading-sm">No images uploaded yet</h3>
+    <p>Upload bout photos, podium moments, academy participation, and official visits to bring the public gallery to life.</p>
+  </div>
+{% endif %}
+{% endblock %}

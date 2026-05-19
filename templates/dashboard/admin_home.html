@@ -1,0 +1,88 @@
+{% extends 'dashboard_base.html' %}
+
+{% block title %}Admin Dashboard - WAKO THANE{% endblock %}
+
+{% block dashboard_content %}
+<div class="dash-header reveal">
+  <div>
+    <span class="section-kicker">Admin overview</span>
+    <h1 class="heading-lg">Manage WAKO Thane's public communication from one place.</h1>
+    <p class="text-muted">Control the hero message, contact details, events, images, and leadership content that athletes and academies see first.</p>
+  </div>
+  <a href="/admin/" class="btn btn-outline btn-sm">Open Django admin</a>
+</div>
+
+<div class="stats-cards">
+  <article class="card stat-card reveal">
+    <div class="stat-val text-gradient">{{ total_events }}</div>
+    <div class="stat-lbl">Events</div>
+  </article>
+  <article class="card stat-card reveal">
+    <div class="stat-val text-gradient">{{ total_gallery }}</div>
+    <div class="stat-lbl">Gallery Images</div>
+  </article>
+  <article class="card stat-card reveal">
+    <div class="stat-val text-gradient">{{ total_members }}</div>
+    <div class="stat-lbl">Members</div>
+  </article>
+  <article class="card stat-card reveal">
+    <div class="stat-val text-gradient">{{ total_users }}</div>
+    <div class="stat-lbl">Registered Users</div>
+  </article>
+  <article class="card stat-card reveal">
+    <div class="stat-val {% if unread_messages %}text-gradient{% endif %}">{{ unread_messages }}</div>
+    <div class="stat-lbl">Unread Messages</div>
+  </article>
+</div>
+
+<div class="dashboard-content-grid">
+  <section class="card reveal">
+    <div class="section-header section-header-tight">
+      <span class="section-kicker">Home page settings</span>
+      <h2 class="heading-md">Update the hero and public contact details</h2>
+      <p>These values are reused across the public pages and footer through a shared site settings context.</p>
+    </div>
+
+    <form method="post" class="form-stack">
+      {% csrf_token %}
+      <div class="input-group">
+        <label class="input-label">Hero Title</label>
+        <input type="text" name="hero_title" class="input-field" value="{{ hero_title }}" required>
+      </div>
+      <div class="input-group">
+        <label class="input-label">Hero Subtitle</label>
+        <textarea name="hero_subtitle" class="input-field">{{ hero_subtitle }}</textarea>
+      </div>
+      <div class="divider"></div>
+      <div class="form-row">
+        <div class="input-group">
+          <label class="input-label">Contact Email</label>
+          <input type="email" name="contact_email" class="input-field" value="{{ contact_email }}" placeholder="info@wakothane.com">
+        </div>
+        <div class="input-group">
+          <label class="input-label">Contact Phone</label>
+          <input type="text" name="contact_phone" class="input-field" value="{{ contact_phone }}" placeholder="+91 00000 00000">
+        </div>
+      </div>
+      <div class="input-group">
+        <label class="input-label">Address</label>
+        <input type="text" name="contact_address" class="input-field" value="{{ contact_address }}" placeholder="Thane, Maharashtra">
+      </div>
+      <button type="submit" class="btn btn-primary">Save settings</button>
+    </form>
+  </section>
+
+  <aside class="card reveal">
+    <div class="section-header section-header-tight">
+      <span class="section-kicker">Launch checklist</span>
+      <h2 class="heading-md">What this dashboard helps you keep current</h2>
+    </div>
+    <ul class="mini-list">
+      <li>Keep the home page headline aligned with current association priorities.</li>
+      <li>Update competition dates, camps, and workshops as soon as they are confirmed.</li>
+      <li>Show medals, bouts, and athlete moments through the gallery and leadership pages.</li>
+      <li>Maintain consistent phone, email, and address details across the public site.</li>
+    </ul>
+  </aside>
+</div>
+{% endblock %}

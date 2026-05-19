@@ -1,0 +1,69 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Login - WAKO THANE{% endblock %}
+
+{% block content %}
+<section class="auth-section">
+  <div class="container auth-layout">
+    <div class="card auth-card reveal">
+      <span class="section-kicker">Welcome back</span>
+      <h2 class="heading-md">Login</h2>
+      <p class="text-muted">Use your username and password to continue.</p>
+
+      <form method="post" class="form-stack">
+        {% csrf_token %}
+        <div class="input-group">
+          <label class="input-label" for="login-username">Username</label>
+          <input id="login-username" type="text" name="username" class="input-field" placeholder="Enter username" required autocomplete="username">
+        </div>
+        <div class="input-group">
+          <label class="input-label" for="login-password">Password</label>
+          <input type="password" name="password" id="login-password" class="input-field" placeholder="Enter password" required autocomplete="current-password">
+        </div>
+        <button type="submit" class="btn btn-primary btn-block">Login</button>
+      </form>
+
+      <div class="divider"></div>
+      <p class="text-muted auth-footer-copy">Do not have an account yet? <a href="{% url 'register' %}">Register here</a>.</p>
+    </div>
+
+    <div class="auth-panel reveal">
+      <img src="{% static 'logo.png' %}" alt="WAKO Thane">
+      <span class="section-kicker">Member access</span>
+      <h1 class="heading-lg">Sign in for events, academy coordination, and athlete updates.</h1>
+      <p>Use the role dashboards to manage public content, review upcoming kickboxing activity, and stay connected to WAKO Thane from any phone.</p>
+
+      <div class="auth-benefits">
+        <div class="auth-benefit">
+          <strong>Admin control</strong>
+          <span>Manage the home page, event calendar, gallery, and leadership profiles from one place.</span>
+        </div>
+        <div class="auth-benefit">
+          <strong>Academy visibility</strong>
+          <span>Keep coaches and athletes aligned with trials, championships, camps, and announcements.</span>
+        </div>
+        <div class="auth-benefit">
+          <strong>Player access</strong>
+          <span>Check your profile and upcoming association activity quickly from your mobile.</span>
+        </div>
+      </div>
+
+      <div class="auth-benefits demo-credentials">
+        <div class="auth-benefit">
+          <strong>Test login: Admin</strong>
+          <span><code>admin</code> / <code>admin@1234</code></span>
+        </div>
+        <div class="auth-benefit">
+          <strong>Test login: Academy</strong>
+          <span><code>academy_demo</code> / <code>academy@1234</code></span>
+        </div>
+        <div class="auth-benefit">
+          <strong>Test login: Player</strong>
+          <span><code>player_demo</code> / <code>player@1234</code></span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}

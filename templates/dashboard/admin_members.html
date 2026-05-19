@@ -1,0 +1,90 @@
+{% extends 'dashboard_base.html' %}
+
+{% block title %}Manage Members - WAKO THANE{% endblock %}
+
+{% block dashboard_content %}
+<div class="dash-header reveal">
+  <div>
+    <span class="section-kicker">Members manager</span>
+    <h1 class="heading-lg">Publish leadership and committee profiles.</h1>
+    <p class="text-muted">Show the faces and roles behind WAKO Thane so academies, athletes, and families know who to contact.</p>
+  </div>
+</div>
+
+<div class="card reveal form-card-spacious">
+  <div class="section-header section-header-tight">
+    <span class="section-kicker">Add member</span>
+    <h2 class="heading-md">Create a member profile</h2>
+  </div>
+  <form method="post" enctype="multipart/form-data" class="form-stack">
+    {% csrf_token %}
+    <input type="hidden" name="action" value="add">
+    <div class="form-row">
+      <div class="input-group">
+        <label class="input-label">Full Name *</label>
+        <input type="text" name="name" class="input-field" placeholder="Rajesh Kumar" required>
+      </div>
+      <div class="input-group">
+        <label class="input-label">Position / Role *</label>
+        <input type="text" name="position" class="input-field" placeholder="President" required>
+      </div>
+    </div>
+    <div class="input-group">
+      <label class="input-label">Profile Photo (Optional)</label>
+      <input type="file" name="image" class="input-field" accept="image/*">
+    </div>
+    <button type="submit" class="btn btn-primary">Add member</button>
+  </form>
+</div>
+
+{% if members %}
+  <div class="card reveal">
+    <div class="section-header section-header-tight">
+      <span class="section-kicker">Existing profiles</span>
+      <h2 class="heading-md">All members ({{ members|length }})</h2>
+    </div>
+    <div class="data-table-wrap">
+      <table class="data-table data-table-mobile">
+        <thead>
+          <tr>
+            <th>Photo</th>
+            <th>Name</th>
+            <th>Position</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for member in members %}
+            <tr>
+              <td data-label="Photo">
+                {% if member.image %}
+                  <img src="{{ member.image.url }}" alt="" style="width:44px;height:44px;border-radius:50%;object-fit:cover;">
+                {% else %}
+                  <div style="width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,rgba(58,152,255,.26),rgba(135,215,255,.3));display:flex;align-items:center;justify-content:center;font-weight:800;color:var(--accent-strong);">
+                    {{ member.name|first }}
+                  </div>
+                {% endif %}
+              </td>
+              <td data-label="Name"><strong>{{ member.name }}</strong></td>
+              <td data-label="Position" class="text-muted">{{ member.position }}</td>
+              <td data-label="Action">
+                <form method="post" onsubmit="return confirm('Remove this member?')">
+                  {% csrf_token %}
+                  <input type="hidden" name="action" value="delete">
+                  <input type="hidden" name="member_id" value="{{ member.id }}">
+                  <button type="submit" class="btn btn-danger btn-sm">Remove</button>
+                </form>
+              </td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+{% else %}
+  <div class="card empty-state reveal">
+    <h3 class="heading-sm">No members yet</h3>
+    <p>Add committee and technical roles here and they will appear automatically on the public leadership page.</p>
+  </div>
+{% endif %}
+{% endblock %}

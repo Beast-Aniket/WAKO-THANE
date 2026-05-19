@@ -1,0 +1,74 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Members - WAKO THANE{% endblock %}
+
+{% block content %}
+<section class="page-hero">
+  <div class="container page-hero-grid">
+    <div class="reveal">
+      <span class="section-kicker">Committee and leadership</span>
+      <h1 class="heading-lg">The people and roles that keep WAKO Thane moving forward.</h1>
+      <p>Committee visibility matters in sports administration. The page now supports leadership credibility, academy trust, and clearer public communication.</p>
+    </div>
+
+    <div class="card page-hero-card reveal">
+      <img src="{% static '1000453732.jpeg' %}" alt="Athletes, officials, and medal winners at a WAKO Thane event" class="card-img">
+      <span class="panel-label">Why this matters</span>
+      <ul class="mini-list">
+        <li>Parents and academies see a more official public face.</li>
+        <li>Organisers, coaches, and technical leads can be clearly represented.</li>
+        <li>The association appears active, accountable, and ready to grow.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container">
+    <div class="section-header reveal">
+      <span class="section-kicker">Leadership roster</span>
+      <h2 class="heading-lg">Association roles, technical responsibility, and community trust</h2>
+      <p>As member profiles are added, this section will give the association a stronger and more recognisable public structure.</p>
+    </div>
+
+    {% if members %}
+      <div class="members-grid">
+        {% for member in members %}
+          <article class="card member-card reveal">
+            <div class="member-img-wrap">
+              {% if member.image %}
+                <img src="{{ member.image.url }}" alt="{{ member.name }}">
+              {% else %}
+                <span class="initials">{{ member.name|first }}</span>
+              {% endif %}
+            </div>
+            <div class="member-name">{{ member.name }}</div>
+            <div class="member-pos">{{ member.position }}</div>
+          </article>
+        {% endfor %}
+      </div>
+    {% else %}
+      <div class="feature-grid">
+        <article class="card feature-card reveal">
+          <span class="feature-index">01</span>
+          <h3 class="heading-sm">Executive leadership</h3>
+          <p>President, secretary, and committee support for association direction, relationships, and long-term planning.</p>
+        </article>
+
+        <article class="card feature-card reveal">
+          <span class="feature-index">02</span>
+          <h3 class="heading-sm">Technical operations</h3>
+          <p>Officials, referees, and coaches helping maintain standards for athlete safety, event quality, and competitive fairness.</p>
+        </article>
+
+        <article class="card feature-card reveal">
+          <span class="feature-index">03</span>
+          <h3 class="heading-sm">Athlete and academy support</h3>
+          <p>Better communication around registrations, schedules, camps, and event-day information for all connected stakeholders.</p>
+        </article>
+      </div>
+    {% endif %}
+  </div>
+</section>
+{% endblock %}

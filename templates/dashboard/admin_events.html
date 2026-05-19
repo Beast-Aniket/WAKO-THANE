@@ -1,0 +1,92 @@
+{% extends 'dashboard_base.html' %}
+
+{% block title %}Manage Events - WAKO THANE{% endblock %}
+
+{% block dashboard_content %}
+<div class="dash-header reveal">
+  <div>
+    <span class="section-kicker">Events manager</span>
+    <h1 class="heading-lg">Publish and maintain the event calendar.</h1>
+    <p class="text-muted">Keep athletes, academies, coaches, and parents updated with trials, championships, camps, weigh-ins, and reporting schedules.</p>
+  </div>
+</div>
+
+<div class="card reveal form-card-spacious">
+  <div class="section-header section-header-tight">
+    <span class="section-kicker">Add event</span>
+    <h2 class="heading-md">Create a new event listing</h2>
+  </div>
+  <form method="post" enctype="multipart/form-data" class="form-stack">
+    {% csrf_token %}
+    <input type="hidden" name="action" value="add">
+    <div class="input-group">
+      <label class="input-label">Event Title *</label>
+      <input type="text" name="title" class="input-field" placeholder="State Championship 2026" required>
+    </div>
+    <div class="form-row">
+      <div class="input-group">
+        <label class="input-label">Date and Time *</label>
+        <input type="datetime-local" name="date" class="input-field" required>
+      </div>
+      <div class="input-group">
+        <label class="input-label">Poster Image</label>
+        <input type="file" name="poster_image" class="input-field" accept="image/*">
+      </div>
+    </div>
+    <div class="input-group">
+      <label class="input-label">Description *</label>
+      <textarea name="description" class="input-field" placeholder="Describe the event..." required></textarea>
+    </div>
+    <button type="submit" class="btn btn-primary">Create event</button>
+  </form>
+</div>
+
+{% if events %}
+  <div class="card reveal">
+    <div class="section-header section-header-tight">
+      <span class="section-kicker">Existing items</span>
+      <h2 class="heading-md">All events ({{ events|length }})</h2>
+    </div>
+    <div class="data-table-wrap">
+      <table class="data-table data-table-mobile">
+        <thead>
+          <tr>
+            <th>Poster</th>
+            <th>Title</th>
+            <th>Date</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for event in events %}
+            <tr>
+              <td data-label="Poster">
+                {% if event.poster_image %}
+                  <img src="{{ event.poster_image.url }}" alt="" style="width:60px;height:40px;object-fit:cover;border-radius:6px;">
+                {% else %}
+                  <div style="width:60px;height:40px;background:var(--border);border-radius:6px;"></div>
+                {% endif %}
+              </td>
+              <td data-label="Title"><strong>{{ event.title }}</strong></td>
+              <td data-label="Date" class="text-muted">{{ event.date|date:"d M Y, H:i" }}</td>
+              <td data-label="Action">
+                <form method="post" onsubmit="return confirm('Delete this event?')">
+                  {% csrf_token %}
+                  <input type="hidden" name="action" value="delete">
+                  <input type="hidden" name="event_id" value="{{ event.id }}">
+                  <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                </form>
+              </td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+{% else %}
+  <div class="card empty-state reveal">
+    <h3 class="heading-sm">No events yet</h3>
+    <p>Add your first event above and it will appear immediately on the public schedule for athletes and academies.</p>
+  </div>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,82 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Events - WAKO THANE{% endblock %}
+
+{% block content %}
+<section class="page-hero">
+  <div class="container page-hero-grid">
+    <div class="reveal">
+      <span class="section-kicker">Kickboxing calendar</span>
+      <h1 class="heading-lg">Upcoming bouts, camps, clinics, and championship dates.</h1>
+      <p>Follow the published calendar for trials, selection events, technical workshops, and athlete reporting details.</p>
+    </div>
+
+    <div class="card page-hero-card reveal">
+      <img src="{% static '1000452560.jpeg' %}" alt="Kickboxing action during a WAKO Thane event" class="card-img">
+      <span class="panel-label">What belongs here</span>
+      <ul class="mini-list">
+        <li>District and state selection kickboxing events.</li>
+        <li>Coaching, refereeing, and technical development clinics.</li>
+        <li>Athlete reporting times, weigh-ins, and registration updates.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container">
+    <div class="section-header reveal">
+      <span class="section-kicker">Upcoming activity</span>
+      <h2 class="heading-lg">Prepare for the next official date</h2>
+      <p>Keep athletes ready and academies aligned with the latest published kickboxing events.</p>
+    </div>
+
+    {% if upcoming %}
+      <div class="events-grid">
+        {% for event in upcoming %}
+          <article class="card event-card reveal">
+            {% if event.poster_image %}
+              <img src="{{ event.poster_image.url }}" alt="{{ event.title }}" class="card-img">
+            {% else %}
+              <img src="{% static '1000451959.jpeg' %}" alt="Kickboxing medals ready for competition winners" class="card-img">
+            {% endif %}
+            <span class="event-date-badge">{{ event.date|date:"d M Y, H:i" }}</span>
+            <h3 class="heading-sm">{{ event.title }}</h3>
+            <p class="text-muted">{{ event.description|truncatewords:24 }}</p>
+            <div class="countdown" data-countdown="{{ event.date|date:'c' }}"></div>
+          </article>
+        {% endfor %}
+      </div>
+    {% else %}
+      <div class="card empty-state reveal">
+        <h3 class="heading-sm">No upcoming events are listed yet</h3>
+        <p>As events are published, this section will keep competitors and academies aligned around the next official date.</p>
+      </div>
+    {% endif %}
+
+    {% if past %}
+      <div class="section-header reveal section-header-tight">
+        <span class="section-kicker">Archive</span>
+        <h2 class="heading-lg">Recent kickboxing activity</h2>
+        <p>Past listings help the association show consistency, momentum, and public proof of organised competition.</p>
+      </div>
+
+      <div class="events-grid">
+        {% for event in past %}
+          <article class="card event-card event-card-past reveal">
+            {% if event.poster_image %}
+              <img src="{{ event.poster_image.url }}" alt="{{ event.title }}" class="card-img card-img-muted">
+            {% else %}
+              <img src="{% static '1000453732.jpeg' %}" alt="Athletes and officials after a kickboxing event" class="card-img card-img-muted">
+            {% endif %}
+            <span class="event-date-badge event-date-badge-muted">{{ event.date|date:"d M Y" }}</span>
+            <h3 class="heading-sm">{{ event.title }}</h3>
+            <p class="text-muted">{{ event.description|truncatewords:20 }}</p>
+          </article>
+        {% endfor %}
+      </div>
+    {% endif %}
+  </div>
+</section>
+{% endblock %}
